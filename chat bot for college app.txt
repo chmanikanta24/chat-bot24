@@ -1,20 +1,108 @@
+#Importing required modules.
+import regex as re
+import random
 from nltk.chat.util import Chat, reflections
+from datetime import datetime
+## To greet the user, based on when the interaction time is.
+def get_greeting(name):
+ current_time = datetime.now().hour
+ if 5 <= current_time < 12:
+ return f"Good morning, {name}! How can I assist you today?"
+ elif 12 <= current_time < 18:
+ return f"Good afternoon, {name}! How can I assist you this afternoon?"
+ else:
+ return f"Good evening, {name}! How can I assist you tonight?"
+def match_input(pattern, user_input):
+ return bool(re.search(pattern, user_input, re.IGNORECASE))
+def greet_user(name):
+ return f"Hello, {name}! How can I help you today?"
+def ask_for_contact_information():
+ print("Sure, I can provide more information. Can I get your:")
+ print("1. Email ID")
+ print("2. Phone Number")
+ choice = input("Please enter the corresponding number (1 or 2): ")
+ if choice == '1':
+ email = input("Could you please provide your email address for further communication? ")
+ return email, ''
+ elif choice == '2':
+ contact_number = input("Great! Additionally, may I have your contact number for better
+assistance? ")
+ return '', contact_number
+ else:
+ print("Invalid choice. Please enter 1 or 2.")
+ return ask_for_contact_information()
+def suggest_something():
+ return "You're welcome! Would you like to know about anything else? You could also contact
+our on-call support for further information."
+def store_user_data(name, email, contact_number):
+ # You can store this data in a database or any other storage mechanism
+ user_data = {
+ 'name': name,
+ 'email': email,
+ 'contact_number': contact_number
+ }
+ print("User data stored successfully!")
+ return user_data
+def handle_user_input(user_input):
+ matched_response = None
+ for pattern, response_list in chat_pairs:
+ if match_input(pattern, user_input):
+ matched_response = response_list
+ break
+ if matched_response:
+ print("Chatbot:", matched_response[0])
+ else:
+ print("Chatbot:", handle_unknown_input())
+def handle_unknown_input():
+ return "I'm sorry, I didn't understand that. If you have any specific questions, feel free to ask."
+def main():
+ print("Hi sir/madam, I am a chatbot from St. Mary's Group Of Institutions.")
+ # Get user's name
+ user_name = input("May I know your name? ")
 
-pairs = [
-    [r'.*\bhi\b.*', ['Hi,how can I help you?']],
-    [r'.*\bcourses\b.*', ['Here are some of the courses provided by the college: B.tech, Diploma, B.pharmacy, MBA.']],
-    [r'.*\bb\.tech\b.*', ['Branches available in the B.tech are Artificial Intelligence, Data science, Cyber Security, Computer science']],
-    [r'.*\bArtificial intelligence\b.*', ['B.Tech AI & ML is 4 years, 8 semester undergraduate programme, imparting knowledge of advanced innovations of AI & machine learning. “Back within the 1950s, the fathers of the sector Minsky and McCarthy described AI as any task performed by a program or a machine.” AI (AI) refers to the machines that are programmed to think like humans and mimic their actions. “Alan Turing stated in 1947 that “What we would like may be a machine which will learn from experience.” Machine learning (ML) is that the study of computer algorithms that improve automatically through experience. it’s seen as a subset of AI']],
-    [r'.*\bData science\b.*', ['In today’s technology-driven world, data is like the raw diamond, and Data Science is the mining infrastructure set-up that makes the data useful for transforming the world. Without the presence of an enormous amount of data, the self-regulating systems cannot be created. So, Data Science in 2020 would be all about crunching huge amounts of data for Business Analytics.In simple words, Data Science is a comprehensive study of data collected by various organizations for their business purposes. It involves the analysis of the gliding data over the Internet through various data analysis tools']],
-    [r'.*\bCyber security\b.*', ['Many cybersecurity programs emphasize practical, hands-on experience. Students may have the opportunity to work in labs, participate in Capture The Flag (CTF) competitions, and even engage in ethical hacking exercises to understand real-world threats and defenses']],
-    [r'.*\bComputer science\b.*', ['B. Tech – (Computer Science Engineering) is 4 years, 8 semesters undergraduate program in which students learn how to solve problems using computers. The most important aspect of Computer Science and Engineering is problem solving, an essential skill for lifeStudents study the design, development and analysis of software and hardware used to solve problems in a variety of business, scientific and social contexts. Because computers solve problems to serve people, there is a significant human side to computer science as well']],
-    [r'.*\bDiploma\b.*',['Branches available in the Diploma are Computer Engineering, Embedded System.']],
-    [r'.*\bComputer engineering\b.*',['Computer Engineering is a specialized degree to give some fundamental information on essential critical thinking methods. Software engineering is an interdisciplinary field, both in its root and application. Software engineering assumes a significant job for all fields such as science, medicine, music, business, law, and correspondence etc. The course is intended to prepare professionals for corporates and functional business.']],
-    [r'.*\bEmbedded system\b.*',['An embedded system is a dedicated computer system designed for one or two specific functions. This system is embedded as a part of a complete device system that includes hardware, such as electrical and mechanical components.In a simple words as its name suggests, Embedded means something that is attached to another thing. An embedded system can be thought of as a computer hardware system having software embedded in it. An embedded system can be an independent system or it can be a part of a large system. An embedded system is a microcontroller or microprocessor based system which is designed to perform a specific task.Embedded systems are more than a part of human life. For example, no one can imagine life without a mobile phone for personal interaction. Its presence is practically indispensable in almost all aspects of human endeavour. Almost every electronic product designed today includes at least one microcontroller or other embedded processor.The course provides in-depth understanding of architecture, pin detail and microcomputer controller interfaces with various input and output peripherals. The course includes study of lower end, middle range and high end microcontroller’s .It also provides an understanding of serial communication protocols.']],
-    [r'.*\bAbout\b.*',['We offer a range of courses with specialized areas and can offer blended learning opportunities to best meet your career needs. If sitting in a room with a faculty and having the opportunity for discussion with other learners sounds good to you then St.Mary’s is the right place for you. We create an atmosphere for you to enjoy your learning and upgrade your skills to meet and exceed in the academics and also be a responsible citizen of our nation.Affliations-St. Mary’s Group of colleges are affiliated with JNTU Hyderabad, JNTU Kakinada, Osmania University, Mahatma Gandhi University Hyderabad, Acharya Nagarjuna University, and the West Bengal University of Technology.All the courses are approved by AICTE and the Institution is Accredited by NBA.Anti ragging-College campus is a place to find valuable friendship and to cherish-unforgettable moments. We, here at St. Mary’s strongly condemn any kind of ragging practices. Our students welcome the freshers with flowers and advice and they do not believe in violence or unhealthy practices.Placements-The college provides to its students unparalleled placements in India and feels proud to have secured for them placements in 300+ Global and Indian Super Brands. Being instrumental in securing for its students the best of the lucrative jobs in various professional fields bears testimony of St.Marys claim to excellence.Academic policy-We at St. Mary’s focus on providing academic calendar to the students well ahead of the commencement of the Semesters. We concentrate more on academic standards and student empowerment by conducting programs such as Guest Lectures, Industrial Tours, Seminars, Workshops, Training Sessions & Pleasure Trips.Academic Achievements-Our Student Ms. M.Meena Kumari has been awarded JNTUH Gold Medal for being the University Topper / first rank among all affiliated colleges of JNTUH. The gold medal was awarded in the 5th convocation at JNTU University Hyderabad by the Hon’ble Governor of Andhra Pradesh.Alumni-The college organizes Alumni Meet every year. The management felicitates alumni and an interactive session is organized with the students. This helps the outgoing students to plan their career and also to get good support and guidance from their seniors. The Alumni also gives suggestions for the benefit of the students.']],
-    [r'.*\bFacilities\b.*',['Facilities provided by the college are Transport facility,Hostel for boys and girls,Bank,Smart classrooms,Sports&Culturals,National Service Scheme(NSS).']],
-    [r'.*\bPlacements\b.*',['our college providing good number of placements for our students from top MNC companies as well as startup companies with minimum package 3lpa and maximum package 10lpa.']]
-]
-if __name__ == "__main__":
-    print("Hi sir/madam, I am a chatbot from St. Mary's group of Institutions.")
-    Chat(pairs, reflections).converse()
+# calling the information asking function
+ email, contact_number = ask_for_contact_information()
+ store_user_data(user_name,email,contact_number)
+ # Greet the user
+ print("Chatbot:", get_greeting(user_name))
+
+ chatbot = Chat(chat_pairs, reflections)
+
+ while True:
+ user_input = input(f"{user_name}: ").lower() # Convert user input to lowercase
+ if user_input in ['bye', 'exit', 'quit','no']:
+ print("Chatbot: Thanks for visiting St Mary's Website. Have a great day. Goodbye!")
+ break
+ handle_user_input(user_input)
+if _name_ == "_main_":
+ chat_pairs = [
+ [r'\bhi\b', ['Hi, how can I help you?']],
+ [r'\bcourses\b', ['Here are some of the courses provided by the college: B.tech, Diploma,
+B.pharmacy, MBA.']],
+ [r'\bb\.tech\b', ['Branches available in B.tech are Artificial Intelligence, Data science, Cyber
+Security, Computer science']],
+ [r'\bartificial intelligence\b', ['B.Tech AI & ML is a 4-year, 8-semester undergraduate
+program, imparting knowledge of advanced innovations of AI & machine learning.']],
+ [r'\bdata science\b', ['In today’s technology-driven world, data is like the raw diamond, and
+Data Science is the mining infrastructure set-up that makes the data useful for transforming the
+world.']],
+ [r'\bcyber security\b', ['Many cybersecurity programs emphasize practical, hands-on
+experience.']],
+ [r'\bcomputer science\b', ['B. Tech – (Computer Science Engineering) is a 4-year, 8-
+semester undergraduate program in which students learn how to solve problems using
+computers.']],
+ [r'\bdiploma\b', ['Branches available in Diploma are Computer Engineering, Embedded
+System.']],
+ [r'\bcomputer engineering\b', ['Computer Engineering is a specialized degree to give some
+fundamental information on essential critical thinking methods.']],
+ [r'\bembedded system\b', ['An embedded system is a dedicated computer system designed
+for one or two specific functions.']],
+ [r'\bunique\b', ['We offer a range of courses with specialized areas and can offer blended
+learning opportunities to best meet your career needs.']],
+ [r'\bfacilities\b', ['Facilities provided by the college are Transport facility, Hostel for boys
+and girls, Bank, Smart classrooms, Sports & Culturals, National Service Scheme (NSS).']],
+ [r'\bplacements\b', ['Our college is providing a good number of placements for our students
+from top MNC companies as well as startup companies with a minimum package of 3lpa and a
+maximum package of 10lpa.']],
+ [r'\bthanks\b', [suggest_something()]]
+ ] main()
